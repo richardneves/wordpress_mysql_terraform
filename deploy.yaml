@@ -1,0 +1,28 @@
+version: '3'
+services:
+  wordpress:
+    image: custom-wordpress
+    build: .
+    container_name: my-wordpress
+    environment:
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+    links:
+      - db:mysql
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /data/blog/html/:/var/www/html
+      - /caminho/para/certs/public/:/etc/ssl/certs/wordpress
+      - /caminho/para/certs/private/:/etc/ssl/private/wordpress
+    restart: always
+  db:
+    image: mariadb
+    container_name: www-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_DB_PASSWORD}
+    volumes:
+      - /data/blog/mysql/:/var/lib/mysql
+    restart: always
